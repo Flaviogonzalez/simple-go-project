@@ -1,0 +1,32 @@
+{
+  "version": "2",
+  "sql": [{
+    "schema": "schema.sql",
+    "queries": "query.sql",
+    "engine": "mysql",
+    "database": {
+      "uri": "mysql://root:root@localhost:3306/authentication"
+    },
+    "gen": {
+      "go": {
+        "out": "models",
+        "overrides": [
+        	{
+            "column": "users.id",
+            "go_type": {
+              "import": "github.com/google/uuid",
+              "type": "UUID"
+            }
+          },
+          {
+            "column": "sessions.id",
+            "go_type": {
+              "import": "github.com/google/uuid",
+              "type": "UUID"
+            }
+          }
+        ]
+      }
+    }
+  }]
+}
