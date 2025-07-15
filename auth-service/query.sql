@@ -1,24 +1,24 @@
--- name: CreateUser :execresult
+-- name: CreateUser :one
 INSERT INTO users (id, name, email, password, policy)
-VALUES (?, ?, ?, ?, ?);
+VALUES ($1, $2, $3, $4, $5) RETURNING *;
 SELECT * FROM users WHERE id = id;
 
 -- name: GetUserByID :one
-SELECT * FROM users WHERE id = ?;
+SELECT * FROM users WHERE id = $1;
 
 -- name: GetUserByEmail :one
-SELECT * FROM users WHERE email = ?;
+SELECT * FROM users WHERE email = $1;
 
 -- name: ListUsers :many
 SELECT * FROM users
-ORDER BY createdAt DESC;
+ORDER BY created_at DESC;
 
--- name: UpdateUser :execresult
+-- name: UpdateUser :one
 UPDATE users
-SET name = name, email = email, emailVerified = emailVerified, password = password, updateAt = CURRENT_TIMESTAMP
-WHERE id = id;
+SET name = $2, email = $3, email_verified = $4, password = $5, updated_at = CURRENT_TIMESTAMP
+WHERE id = $1 RETURNING *;
 SELECT * FROM users WHERE id = id;
 
 -- name: DeleteUser :exec
-DELETE FROM users WHERE id = id;
+DELETE FROM users WHERE id = $1;
 

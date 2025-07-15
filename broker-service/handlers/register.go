@@ -4,6 +4,7 @@ import (
 	"broker-service/event"
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -28,6 +29,8 @@ func HandleRegister(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to unmarshal payload", http.StatusBadRequest)
 		return
 	}
+
+	log.Println(registerPayload)
 
 	if registerPayload.Email == "" || registerPayload.Password == "" || registerPayload.Name == "" {
 		http.Error(w, "Name, email, and password are required", http.StatusBadRequest)

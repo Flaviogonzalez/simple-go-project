@@ -11,13 +11,13 @@ import (
 )
 
 type EventPayload struct {
-	Name string
-	Data json.RawMessage
+	Name string          `json:"name"`
+	Data json.RawMessage `json:"data"`
 }
 
 type TopicPayload struct {
-	Name  string
-	Event EventPayload
+	Name  string       `json:"name"`
+	Event EventPayload `json:"event"`
 }
 
 func ConnectToRabbit() *amqp.Connection {
@@ -50,7 +50,7 @@ func ConnectToRabbit() *amqp.Connection {
 
 func SendToListener(w http.ResponseWriter, exchange string, topicPayload TopicPayload) error {
 	conn := ConnectToRabbit()
-	e := NewEmitter(conn, "AuthenticationService")
+	e := NewEmitter(conn, exchange)
 
 	err := e.Push(w, topicPayload)
 	if err != nil {

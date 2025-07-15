@@ -11,20 +11,21 @@ services:
       replicas: 1
     volumes:
       - "./db-data/rabbitmq/:/var/lib/rabbitmq"
-  mysql:
-    image: "mysql:8.0.34"
-    container_name: mysql
+  postgres:
+    image: "postgres:17.5-alpine3.22"
+    container_name: auth_db
     ports:
-      - "3306:3306"
+      - "5432:5432"
     restart: always
     deploy:
       mode: replicated
       replicas: 1
     volumes:
-      - "./db-data/mysql/:/var/lib/mysql"
+      - "./db-data/postgres/:/var/lib/postgresql/data/"
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=authentication
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=authentication
   broker-service:
     build:
       context: ./../broker-service
@@ -59,4 +60,4 @@ services:
       mode: replicated
       replicas: 1
     environment:
-      - DATABASE_URL=mysql://root:root@tcp(localhost:3306)/authentication
+      - DATABASE_URL=host=auth_db port=5432 user=postgres password=root dbname=authentication sslmode=disable timezone=UTC

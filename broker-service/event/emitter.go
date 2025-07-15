@@ -3,6 +3,7 @@ package event
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -30,6 +31,8 @@ func (e *Emitter) Push(w http.ResponseWriter, topicPayload TopicPayload) error {
 		return err
 	}
 	defer ch.Close()
+
+	log.Println("push function: topic payload: ", topicPayload)
 
 	jsonBytes, err := json.Marshal(topicPayload.Event)
 	if err != nil {

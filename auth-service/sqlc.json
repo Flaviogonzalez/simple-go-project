@@ -3,9 +3,9 @@
   "sql": [{
     "schema": "schema.sql",
     "queries": "query.sql",
-    "engine": "mysql",
+    "engine": "postgresql",
     "database": {
-      "uri": "mysql://root:root@localhost:3306/authentication"
+      "uri": "postgres://postgres:root@localhost:5432/authentication"
     },
     "gen": {
       "go": {

@@ -13,20 +13,20 @@ import (
 
 type Session struct {
 	ID           uuid.UUID
-	Sessiontoken string
-	Userid       []byte
+	SessionToken string
+	UserID       uuid.UUID
 	Expires      time.Time
-	Createdat    time.Time
-	Updateat     time.Time
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 type User struct {
 	ID            uuid.UUID
 	Name          string
 	Email         string
-	Emailverified sql.NullTime
+	EmailVerified sql.NullTime
 	Policy        int32
 	Password      string
-	Createdat     time.Time
-	Updateat      time.Time
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
 }

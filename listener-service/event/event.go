@@ -7,9 +7,9 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-type EventPayload struct {
-	Name  string
-	Event json.RawMessage
+type EventPayload struct { // los tipos de datos que se envian y reciben tienen que tener LOS MISMOS NOMBRES TANTO EN JSON COMO EN EL STRUCT
+	Name string          `json:"name"`
+	Data json.RawMessage `json:"data"`
 }
 
 func (c *Consumer) handlePayload(payload EventPayload, ch *amqp.Channel, msg amqp.Delivery) error {
@@ -21,7 +21,7 @@ func (c *Consumer) handlePayload(payload EventPayload, ch *amqp.Channel, msg amq
 	}
 
 	log.Println("Event detected, executing function")
-	r, err := function(payload.Event)
+	r, err := function(payload.Data)
 	if err != nil {
 		log.Println("error executing event: ", err)
 	}

@@ -82,12 +82,16 @@ func (c *Consumer) Listen(topics []string) error {
 	for d := range messages {
 		go func(d amqp.Delivery) {
 			log.Println("nuevo mensaje de: ", d.Exchange)
+
 			var eventPayload EventPayload
 			err = json.Unmarshal(d.Body, &eventPayload)
+
 			if err != nil {
 				_ = d.Nack(false, false)
 				return
 			}
+
+			log.Println(eventPayload)
 
 			err = c.handlePayload(eventPayload, ch, d)
 			if err != nil {
