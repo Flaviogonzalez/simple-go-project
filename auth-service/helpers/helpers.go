@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"encoding/json"
+	"maps"
 	"net/http"
 )
 
@@ -35,4 +36,18 @@ func ErrorJSON(w http.ResponseWriter, errorCode int, message string) {
 
 	w.WriteHeader(errorCode)
 	w.Write(data)
+}
+
+func WriteJSON(w http.ResponseWriter, status int, data any, headers http.Header) error {
+	js, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	maps.Copy(w.Header(), headers)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	w.Write(js)
+	return nil
 }

@@ -12,24 +12,28 @@ type EventPayload struct { // los tipos de datos que se envian y reciben tienen 
 	Data json.RawMessage `json:"data"`
 }
 
-func (c *Consumer) handlePayload(payload EventPayload, ch *amqp.Channel, msg amqp.Delivery) error {
+func (c *Consumer) handlePayload(payload EventPayload, ch *amqp.Channel, msg amqp.Delivery) {
 	var response []byte
 	function, ok := c.handlers[payload.Name]
 	if !ok {
 		log.Println("error trying to execute a function method for the event")
-		return nil
+		msg.Nack(false, false)
+		return
 	}
 
 	log.Println("Event detected, executing function")
 	r, err := function(payload.Data)
 	if err != nil {
 		log.Println("error executing event: ", err)
+		msg.Nack(false, false)
+		return
 	}
 	response = r
 
 	if msg.ReplyTo == "" {
 		log.Printf("No ReplyTo queue specified for event: %s, correlationId: %s", payload.Name, msg.CorrelationId)
-		return nil
+		msg.Nack(false, false)
+		return
 	}
 
 	err = ch.Publish(
@@ -46,9 +50,9 @@ func (c *Consumer) handlePayload(payload EventPayload, ch *amqp.Channel, msg amq
 
 	if err != nil {
 		log.Printf("Failed to publish response to %s: %v", msg.ReplyTo, err)
-		return err
+		msg.Nack(false, false)
+		return
 	}
 
 	log.Printf("Successfully published response to %s for event: %s, correlationId: %s", msg.ReplyTo, payload.Name, msg.CorrelationId)
-	return nil
 }

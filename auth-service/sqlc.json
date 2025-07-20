@@ -1,8 +1,8 @@
 {
   "version": "2",
   "sql": [{
-    "schema": "schema.sql",
-    "queries": "query.sql",
+    "schema": "/migrations/schemas",
+    "queries": "/migrations/queries",
     "engine": "postgresql",
     "database": {
       "uri": "postgres://postgres:root@localhost:5432/authentication"

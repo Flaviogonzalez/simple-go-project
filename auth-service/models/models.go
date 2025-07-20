@@ -14,6 +14,7 @@ import (
 type Session struct {
 	ID           uuid.UUID
 	SessionToken string
+	CsrfToken    string
 	UserID       uuid.UUID
 	Expires      time.Time
 	CreatedAt    time.Time

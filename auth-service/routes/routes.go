@@ -26,6 +26,12 @@ func Routes(db *sql.DB) http.Handler {
 	mux.Use(AuthMiddleware.HandlerWrapper(db))
 
 	mux.Post("/register", handlers.RegisterHandler)
+	mux.Post("/login", handlers.LoginHandler)
 
+	mux.Group(func(mux chi.Router) {
+		mux.Use(AuthMiddleware.CSRFCheck)
+
+		mux.Post("/logout", handlers.LogoutHandler)
+	})
 	return mux
 }

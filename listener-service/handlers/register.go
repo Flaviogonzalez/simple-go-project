@@ -1,11 +1,9 @@
 package handlers
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
+	"listener-service/helpers"
 )
 
 type ResponsePayload struct {
@@ -14,33 +12,18 @@ type ResponsePayload struct {
 }
 
 func HandleRegister(payload json.RawMessage) ([]byte, error) {
-	client := &http.Client{}
-
-	req, err := http.NewRequest("POST", "http://auth-service/register", bytes.NewReader(payload))
+	response, err := helpers.SendRequest("http://auth-service/register", "POST", payload)
 	if err != nil {
 		return nil, err
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	response, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return response, err
 	}
 
 	var registerPayload ResponsePayload
-	err = json.Unmarshal(response, &registerPayload)
-	if err != nil {
-		return response, err
+	if err := json.Unmarshal(response, &registerPayload); err != nil {
+		return nil, err
 	}
 
 	if registerPayload.Error {
-		return response, fmt.Errorf("registration failed: %s", registerPayload.Message)
+		return nil, fmt.Errorf("registration failed: %s", registerPayload.Message)
 	}
 
 	return response, nil

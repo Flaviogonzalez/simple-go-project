@@ -13,6 +13,8 @@ import (
 
 var authHandlers = map[string]func(event json.RawMessage) ([]byte, error){
 	"RegisterEvent": handlers.HandleRegister,
+	"LoginEvent":    handlers.LoginHandler,
+	"LogoutEvent":   handlers.LogoutHandler,
 }
 
 func main() {
@@ -25,7 +27,7 @@ func main() {
 	}
 	log.Println("bien. creó el consumidor!")
 
-	err = consumer.Listen([]string{"user.register", "user.login"})
+	err = consumer.Listen([]string{"user.register", "user.login", "user.logout"})
 	if err != nil {
 		log.Println(err.Error())
 	}

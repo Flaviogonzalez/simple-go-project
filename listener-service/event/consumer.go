@@ -93,12 +93,7 @@ func (c *Consumer) Listen(topics []string) error {
 
 			log.Println(eventPayload)
 
-			err = c.handlePayload(eventPayload, ch, d)
-			if err != nil {
-				log.Printf("error handling payload: %v", err)
-				_ = d.Nack(false, false)
-				return
-			}
+			go c.handlePayload(eventPayload, ch, d)
 			d.Ack(true)
 		}(d)
 	}
