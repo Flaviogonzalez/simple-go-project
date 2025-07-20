@@ -1,0 +1,18 @@
+{
+  "version": "2",
+  "sql": [
+    {
+      "engine": "postgresql",
+      "schema": "/migrations/schemas",
+      "queries": "/migrations/queries",
+      "database": {
+        "uri": "postgres://postgres:root@localhost:5432/logdb?sslmode=disable"
+      },
+      "gen": {
+        "go": {
+          "out": "models"
+        }
+      }
+    }
+  ]
+} 
